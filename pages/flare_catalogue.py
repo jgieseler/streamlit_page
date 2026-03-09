@@ -5,6 +5,10 @@ from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode #, StAggridThem
 from st_aggrid.shared import JsCode
 from time import sleep
 
+from page_config import setup
+
+setup()
+
 fname = 'SOLER_Flare_catalogue'  # 'full_catalogue_with_stix_merged_with_cme'
 
 st.title('Flare catalogue')
@@ -155,6 +159,8 @@ sleep(0.01)
 # except AttributeError:
 #   pass
 
+if 'selected_theme' not in st.session_state:
+  st.session_state.selected_theme = "streamlit"
 
 with details_container:
     with st.container(border=True):

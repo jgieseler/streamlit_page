@@ -1,5 +1,8 @@
 import streamlit as st
 
+from page_config import setup
+
+setup()
 
 st.title("SOLER Catalogues")
 

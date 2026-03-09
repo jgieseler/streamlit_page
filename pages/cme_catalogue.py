@@ -3,7 +3,9 @@ import streamlit as st
 from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode #, StAggridTheme, ColumnsAutoSizeMode
 # from st_aggrid.shared import JsCode
 
+from page_config import setup
 
+setup()
 
 
 st.title('CME catalogue')
@@ -94,6 +96,8 @@ gridOptions['autoSizeStrategy'] = 'fitCellContents'
 #     .withParts("iconSetAlpine", "colorSchemeDark")
 # )
 
+if 'selected_theme' not in st.session_state:
+  st.session_state.selected_theme = "streamlit"
 
 grid1 = AgGrid(df_cme, show_toolbar=True, height=500, gridOptions=gridOptions, 
                 updateMode=GridUpdateMode.SELECTION_CHANGED,  # GridUpdateMode.VALUE_CHANGED,

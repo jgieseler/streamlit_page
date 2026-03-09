@@ -4,6 +4,10 @@ from st_aggrid import AgGrid, ColumnsAutoSizeMode, GridOptionsBuilder, GridUpdat
 from st_aggrid.shared import JsCode
 from time import sleep
 
+from page_config import setup
+
+setup()
+
 fname = 'SOLER_SEP_catalogue'  # 'full_catalogue_with_stix_merged_with_cme'
 
 st.title('SEP catalogue')
@@ -132,7 +136,8 @@ gridOptions['autoSizeStrategy'] = 'fitCellContents'  # 'fitGridWidth'  # 'fitCel
 gridOptions['enableCellSpan'] = 'true'
 gridOptions['suppressColumnVirtualisation'] = True
 
-
+if 'selected_theme' not in st.session_state:
+  st.session_state.selected_theme = "streamlit"
 
 grid3 = AgGrid(df_sep, show_toolbar=True, height=500, gridOptions=gridOptions, 
                 updateMode=GridUpdateMode.SELECTION_CHANGED,  # GridUpdateMode.VALUE_CHANGED,
