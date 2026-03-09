@@ -32,7 +32,7 @@ def setup():
             ]
 
     pg = st.navigation(pages, position="top")
-    pg.run()
+    # pg.run()
 
 
     st.markdown(
@@ -55,3 +55,5 @@ def setup():
             """,
         unsafe_allow_html=True,
     )
+
+    return pg
