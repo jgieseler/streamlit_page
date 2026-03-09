@@ -3,7 +3,9 @@ import streamlit as st
 from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode #, StAggridTheme, ColumnsAutoSizeMode
 # from st_aggrid.shared import JsCode
 
+from page_config import setup
 
+setup()
 
 
 st.title('CME catalogue')

@@ -4,6 +4,10 @@ from st_aggrid import AgGrid, ColumnsAutoSizeMode, GridOptionsBuilder, GridUpdat
 from st_aggrid.shared import JsCode
 from time import sleep
 
+from page_config import setup
+
+setup()
+
 fname = 'SOLER_SEP_catalogue'  # 'full_catalogue_with_stix_merged_with_cme'
 
 st.title('SEP catalogue')
