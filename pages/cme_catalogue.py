@@ -1,18 +1,20 @@
+import os
 import pandas as pd
 import streamlit as st
 from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode #, StAggridTheme, ColumnsAutoSizeMode
 # from st_aggrid.shared import JsCode
 
-from page_config import setup
+from page_config import setup, get_download_link
 
 setup()
 
+fname = 'SOLER_CME_catalogue'
 
 st.title('CME catalogue')
 
 st.write('This catalogue contains coronal mass ejections (CMEs) with a speed > 1000 km/s obtained from the existing CME lists from the Large Angle and Spectrometric Coronagraph Experiment (LASCO) onboard Solar and Heliospheric Observatory (SOHO).')
 
-df_cme_org = pd.read_csv('catalogues/SOLER_CME_catalogue.csv', sep=',',
+df_cme_org = pd.read_csv(f'catalogues/{fname}.csv', sep=',',
                     parse_dates=['Start Time (Observer)', 'Start time (1 AU)', 'Start time (Sun)'])
 
 # remove asterix (*) from columns
@@ -114,4 +116,10 @@ else:
   st.write(grid1['selected_rows'])
   # st.image(grid1['selected_rows']['IP Radio Bursts'].values[0])
 
-st.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">To download a table as csv file, move the mouse over it and click on the <i class="fa-solid fa-download"></i> icon in the top right of the table.', unsafe_allow_html=True)
+st.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">To download the shown table as csv file, move the mouse over it and click on the <i class="fa-solid fa-download"></i> icon in the top right of the table.', unsafe_allow_html=True)
+
+file_path = os.path.join("catalogues", f"{fname}.csv")
+st.markdown(
+    get_download_link(file_path, "Click here to download the full catalogue containing all columns as csv file!"),
+    unsafe_allow_html=True
+)
