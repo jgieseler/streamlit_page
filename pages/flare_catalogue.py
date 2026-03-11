@@ -1,3 +1,4 @@
+import os
 import pooch
 import pandas as pd
 import streamlit as st
@@ -5,7 +6,7 @@ from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode #, StAggridThem
 from st_aggrid.shared import JsCode
 from time import sleep
 
-from page_config import setup
+from page_config import setup, get_download_link
 
 setup()
 
@@ -176,4 +177,10 @@ with details_container:
         # st.image(grid2['selected_rows']['IP Radio Bursts'].values[0])
         st.write('Plots obtained from https://parker.gsfc.nasa.gov/crocs.html')
 
-st.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">To download a table as csv file, move the mouse over it and click on the <i class="fa-solid fa-download"></i> icon in the top right of the table.', unsafe_allow_html=True)
+st.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">To download the shown table as csv file, move the mouse over it and click on the <i class="fa-solid fa-download"></i> icon in the top right of the table.', unsafe_allow_html=True)
+
+file_path = os.path.join("catalogues", f"{fname}.csv")
+st.markdown(
+    get_download_link(file_path, "Click here to download the full catalogue containing all columns as csv file!"),
+    unsafe_allow_html=True
+)

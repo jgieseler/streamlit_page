@@ -1,3 +1,5 @@
+import base64
+import os
 import streamlit as st
 
 def setup():
@@ -57,3 +59,14 @@ def setup():
     )
 
     return pg
+
+
+def get_download_link(file_path: str, link_text: str) -> str:
+    with open(file_path, "rb") as f:
+        data = f.read()
+    
+    b64 = base64.b64encode(data).decode()
+    file_name = os.path.basename(file_path)
+    
+    href = f'<a href="data:file/csv;base64,{b64}" download="{file_name}">{link_text}</a>'
+    return href
