@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 import streamlit as st
-from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode #, StAggridTheme, ColumnsAutoSizeMode
+from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode  # StAggridTheme, ColumnsAutoSizeMode
 # from st_aggrid.shared import JsCode
 
 from page_config import setup, get_download_link
@@ -15,7 +15,7 @@ st.title('CME catalogue')
 st.write('This catalogue contains coronal mass ejections (CMEs) with a speed > 1000 km/s obtained from the existing CME lists from the Large Angle and Spectrometric Coronagraph Experiment (LASCO) onboard Solar and Heliospheric Observatory (SOHO).')
 
 df_cme_org = pd.read_csv(f'catalogues/{fname}.csv', sep=',',
-                    parse_dates=['Start Time (Observer)', 'Start time (1 AU)', 'Start time (Sun)'])
+                         parse_dates=['Start Time (Observer)', 'Start time (1 AU)', 'Start time (Sun)'])
 
 # remove asterix (*) from columns
 # for col in ['Acceleration', 'Mass', 'Kinetic Energy']:
@@ -29,12 +29,14 @@ df_cme_org = pd.read_csv(f'catalogues/{fname}.csv', sep=',',
 # sc['STA'] = col4.checkbox("STEREO A", value=True)
 # sc['SolO'] = col5.checkbox("Solar Orbiter", value=True)
 
+
 def store_value(my_key):
     # Copy the value to the permanent key
     st.session_state[my_key] = st.session_state[f"_{my_key}"]
 
+
 default_columns = df_cme_org.keys().tolist()
-hid_cols = ["Start time (Sun)" , "Start time (1 AU)"]
+hid_cols = ["Start time (Sun)", "Start time (1 AU)"]
 for col in hid_cols:
   default_columns.remove(col)
 
@@ -51,7 +53,7 @@ if 'selected_columns_cme' in st.session_state:
   # hidden_columns = hidden_columns.remove('CME IDX')
   # st.write([col for col in st.session_state.selected_columns_cme])
   for col in st.session_state.selected_columns_cme:
-    hidden_columns.remove(col) 
+    hidden_columns.remove(col)
   # [hidden_columns.remove(col) for col in st.session_state.selected_columns_cme]
 else:
   df_cme = df_cme_org[default_keys]
@@ -83,7 +85,7 @@ for key in df_cme.keys():
 
 gridOptions = gb.build()
 # gridOptions['pagination'] = True
-# gridOptions['paginationPageSize'] = 20    
+# gridOptions['paginationPageSize'] = 20
 # gridOptions['sideBar'] = True  # TODO: not working?
 # gridOptions['defaultColDef'] = {"filter": True, "groupable": True, "value": True, "enableRowGroup": True, "aggFunc": "sum"}
 gridOptions['rowSelection'] = 'multiple'  # 'single'
@@ -101,13 +103,13 @@ gridOptions['autoSizeStrategy'] = 'fitCellContents'
 if 'selected_theme' not in st.session_state:
   st.session_state.selected_theme = "streamlit"
 
-grid1 = AgGrid(df_cme, show_toolbar=True, height=500, gridOptions=gridOptions, 
-                updateMode=GridUpdateMode.SELECTION_CHANGED,  # GridUpdateMode.VALUE_CHANGED,
-                allow_unsafe_jscode=True,
-                # columns_auto_size_mode=ColumnsAutoSizeMode.FIT_CONTENTS,
-                theme=st.session_state.selected_theme,
-                key="table1",
-                )
+grid1 = AgGrid(df_cme, show_toolbar=True, height=500, gridOptions=gridOptions,
+               updateMode=GridUpdateMode.SELECTION_CHANGED,  # GridUpdateMode.VALUE_CHANGED,
+               allow_unsafe_jscode=True,
+               # columns_auto_size_mode=ColumnsAutoSizeMode.FIT_CONTENTS,
+               theme=st.session_state.selected_theme,
+               key="table1",
+               )
 
 
 if (type(grid1['selected_rows']).__name__ == "NoneType"):

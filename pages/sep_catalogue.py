@@ -79,11 +79,11 @@ hidden_columns = df_sep_org.keys().tolist()
 if 'selected_columns_sep' in st.session_state:
   df_sep = df_sep_org[st.session_state.selected_columns_sep]
   for col in st.session_state.selected_columns_sep:
-    hidden_columns.remove(col) 
+    hidden_columns.remove(col)
 else:
   df_sep = df_sep_org[default_keys]
   for col in default_keys:
-    hidden_columns.remove(col) 
+    hidden_columns.remove(col)
 if len(hidden_columns) == 0:
   st.write("All columns are displayed.")
 elif len(hidden_columns) > 0:
@@ -130,7 +130,7 @@ for key in ["SEP_IDX", "Flare_IDX", "CME_IDX", "Event No", "event number"]:
   if key in df_sep.columns:
     gb.configure_column(key, spanRows='true')
 
-gridOptions = gb.build() 
+gridOptions = gb.build()
 gridOptions['rowSelection'] = 'single'  # 'multiple'  # 'single'
 gridOptions["tooltipShowDelay"] = 500
 gridOptions['autoSizeStrategy'] = 'fitCellContents'  # 'fitGridWidth'  # 'fitCellContents'
@@ -140,14 +140,14 @@ gridOptions['suppressColumnVirtualisation'] = True
 if 'selected_theme' not in st.session_state:
   st.session_state.selected_theme = "streamlit"
 
-grid3 = AgGrid(df_sep, show_toolbar=True, height=500, gridOptions=gridOptions, 
-                updateMode=GridUpdateMode.SELECTION_CHANGED,  # GridUpdateMode.VALUE_CHANGED,
-                allow_unsafe_jscode=True,
-                # columns_auto_size_mode=ColumnsAutoSizeMode.FIT_CONTENTS,
-                theme=st.session_state.selected_theme,
-                key="table3",
-                # update_on = ['selectionChanged'],
-                )
+grid3 = AgGrid(df_sep, show_toolbar=True, height=500, gridOptions=gridOptions,
+               updateMode=GridUpdateMode.SELECTION_CHANGED,  # GridUpdateMode.VALUE_CHANGED,
+               allow_unsafe_jscode=True,
+               # columns_auto_size_mode=ColumnsAutoSizeMode.FIT_CONTENTS,
+               theme=st.session_state.selected_theme,
+               key="table3",
+               # update_on = ['selectionChanged'],
+               )
 
 
 # this is a workaround to avoid showing details from previous selection while new selection is being processed until https://github.com/streamlit/streamlit/issues/5044 is resolved.

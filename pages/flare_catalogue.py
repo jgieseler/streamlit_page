@@ -2,7 +2,7 @@ import os
 import pooch
 import pandas as pd
 import streamlit as st
-from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode #, StAggridTheme
+from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode  # StAggridTheme
 from st_aggrid.shared import JsCode
 from time import sleep
 
@@ -19,16 +19,16 @@ st.write('This catalogue contains solar flares with a flare class > M5 observed 
 t_df = pd.read_csv(f'catalogues/{fname}.csv', sep=',')
 time_columns = [col for col in t_df.columns if 'Time' in col]
 
-
-
 df_flare_org = pd.read_csv(f'catalogues/{fname}.csv', sep=',', parse_dates=time_columns)
+
 
 def store_value(my_key):
     # Copy the value to the permanent key
     st.session_state[my_key] = st.session_state[f"_{my_key}"]
 
+
 default_columns = df_flare_org.keys().tolist()
-hid_cols = ["Start Time at 1 AU (GOES)", "Start Time at 1 AU (STIX)", "Peak Time at 1 AU (GOES)", "Peak Time at 1 AU (STIX)", "End Time at 1 AU (GOES)", "End Time at 1 AU (STIX)", 
+hid_cols = ["Start Time at 1 AU (GOES)", "Start Time at 1 AU (STIX)", "Peak Time at 1 AU (GOES)", "Peak Time at 1 AU (STIX)", "End Time at 1 AU (GOES)", "End Time at 1 AU (STIX)",
             "Start Time at the Sun (GOES)", "Start Time at the Sun (STIX)", "Peak Time at the Sun (GOES)", "Peak Time at the Sun (STIX)", "End Time at the Sun (GOES)", "End Time at the Sun (STIX)"]
 for col in hid_cols:
   default_columns.remove(col)
@@ -44,11 +44,11 @@ hidden_columns = df_flare_org.keys().tolist()
 if 'selected_columns_flare' in st.session_state:
   df_flare = df_flare_org[st.session_state.selected_columns_flare]
   for col in st.session_state.selected_columns_flare:
-    hidden_columns.remove(col) 
+    hidden_columns.remove(col)
 else:
   df_flare = df_flare_org[default_keys]
   for col in default_keys:
-    hidden_columns.remove(col) 
+    hidden_columns.remove(col)
 if len(hidden_columns) == 0:
   st.write("All columns are displayed.")
 elif len(hidden_columns) > 0:
@@ -97,10 +97,10 @@ cell_stylejscode = JsCode("""
         }
 };
 """)
-gb.configure_columns(column_names=time_columns, cellStyle = cell_stylejscode)
+gb.configure_columns(column_names=time_columns, cellStyle=cell_stylejscode)
 
 
-gridOptions = gb.build() 
+gridOptions = gb.build()
 gridOptions['rowSelection'] = 'multiple'  # 'multiple'  # 'single'
 gridOptions["tooltipShowDelay"] = 500
 gridOptions['autoSizeStrategy'] = 'fitCellContents'  # 'fitGridWidth'  # 'fitCellContents'
@@ -118,10 +118,6 @@ gridOptions['autoSizeStrategy'] = 'fitCellContents'  # 'fitGridWidth'  # 'fitCel
 # """)
 # gridOptions['getRowStyle'] = jscode2
 
-
-
-
-
 # gridOptions["columnDefs"].append(
 #     {
 #         "field": "clicked",
@@ -137,14 +133,14 @@ gridOptions['autoSizeStrategy'] = 'fitCellContents'  # 'fitGridWidth'  # 'fitCel
 if 'selected_theme' not in st.session_state:
   st.session_state.selected_theme = "streamlit"
 
-grid2 = AgGrid(df_flare, show_toolbar=True, height=500, gridOptions=gridOptions, 
-                updateMode=GridUpdateMode.SELECTION_CHANGED,  # GridUpdateMode.VALUE_CHANGED,
-                allow_unsafe_jscode=True,
-                # columns_auto_size_mode=ColumnsAutoSizeMode.FIT_CONTENTS,
-                theme=st.session_state.selected_theme,
-                key="table2",
-                # update_on = ['selectionChanged'],
-                )
+grid2 = AgGrid(df_flare, show_toolbar=True, height=500, gridOptions=gridOptions,
+               updateMode=GridUpdateMode.SELECTION_CHANGED,  # GridUpdateMode.VALUE_CHANGED,
+               allow_unsafe_jscode=True,
+               # columns_auto_size_mode=ColumnsAutoSizeMode.FIT_CONTENTS,
+               theme=st.session_state.selected_theme,
+               key="table2",
+               # update_on = ['selectionChanged'],
+               )
 
 
 # this is a workaround to avoid showing details from previous selection while new selection is being processed until https://github.com/streamlit/streamlit/issues/5044 is resolved.
