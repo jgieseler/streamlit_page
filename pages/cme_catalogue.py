@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import streamlit as st
 from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode  # StAggridTheme, ColumnsAutoSizeMode
-# from st_aggrid.shared import JsCode
+from st_aggrid.shared import JsCode
 
 from page_config import setup, get_download_link
 
@@ -14,8 +14,10 @@ st.title('CME catalogue')
 
 st.write('This catalogue contains coronal mass ejections (CMEs) with a speed > 1000 km/s obtained from the existing CME lists from the Large Angle and Spectrometric Coronagraph Experiment (LASCO) onboard Solar and Heliospheric Observatory (SOHO).')
 
-df_cme_org = pd.read_csv(f'catalogues/{fname}.csv', sep=',',
-                         parse_dates=['Start Time (Observer)', 'Start time (1 AU)', 'Start time (Sun)'])
+t_df = pd.read_csv(f'catalogues/{fname}.csv', sep=',')
+time_columns = [col for col in t_df.columns if 'Time' in col]
+
+df_cme_org = pd.read_csv(f'catalogues/{fname}.csv', sep=',', parse_dates=time_columns)
 
 # remove asterix (*) from columns
 # for col in ['Acceleration', 'Mass', 'Kinetic Energy']:
@@ -36,7 +38,7 @@ def store_value(my_key):
 
 
 default_columns = df_cme_org.keys().tolist()
-hid_cols = ["Start time (Sun)", "Start time (1 AU)"]
+hid_cols = ["Start Time (Sun)", "Start Time (1 AU)"]
 for col in hid_cols:
     default_columns.remove(col)
 
@@ -45,7 +47,7 @@ if 'selected_columns_cme' in st.session_state:
 else:
     default_keys = default_columns  # TODO: provides this as an option? show all columns?
 
-st.multiselect("Select columns to display (by default all are active).", options=df_cme_org.keys(), default=default_keys, key='_selected_columns_cme', on_change=store_value, args=["selected_columns_cme"])
+st.multiselect("Select columns to display (by default only a selection is active; click below to add hidden columns).", options=df_cme_org.keys(), default=default_keys, key='_selected_columns_cme', on_change=store_value, args=["selected_columns_cme"])
 # st.multiselect("Select columns to display  (by default all are active).", options=df_cme.keys(), default=df_cme.keys(), key='selected_columns_cme')
 hidden_columns = df_cme_org.keys().tolist()
 if 'selected_columns_cme' in st.session_state:
@@ -83,6 +85,20 @@ for key in df_cme.keys():
 # gb.configure_side_bar()  # TODO: not working?
 # gb.configure_default_column(filter=True, groupable=True, value=True, enableRowGroup=True, aggFunc="sum")
 
+# Make NaT values invisible without removing them
+cell_stylejscode = JsCode("""
+        function(params) {
+                console.log(params.value);
+                if (params.value === 'NaT') {
+                        return {
+                                'color':'rgb(0, 0, 0, 0.0)',
+                                /// 'backgroundColor':'white'
+                        }
+                }
+};
+""")
+gb.configure_columns(column_names=time_columns, cellStyle=cell_stylejscode)
+
 gridOptions = gb.build()
 # gridOptions['pagination'] = True
 # gridOptions['paginationPageSize'] = 20
@@ -117,6 +133,8 @@ if (type(grid1['selected_rows']).__name__ == "NoneType"):
 else:
     st.write(grid1['selected_rows'])
     # st.image(grid1['selected_rows']['IP Radio Bursts'].values[0])
+
+st.write('Note for values marked with `*`: Acceleration is uncertain due to either poor height measurement or a small number of height-time measurements')
 
 st.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">To download the shown table as csv file, move the mouse over it and click on the <i class="fa-solid fa-download"></i> icon in the top right of the table.', unsafe_allow_html=True)
 
