@@ -45,7 +45,7 @@ if 'selected_columns_cme' in st.session_state:
 else:
     default_keys = default_columns  # TODO: provides this as an option? show all columns?
 
-st.multiselect("Select columns to display (by default all are active).", options=df_cme_org.keys(), default=default_keys, key='_selected_columns_cme', on_change=store_value, args=["selected_columns_cme"])
+st.multiselect("Select columns to display (by default only a selection is active; click below to add hidden columns).", options=df_cme_org.keys(), default=default_keys, key='_selected_columns_cme', on_change=store_value, args=["selected_columns_cme"])
 # st.multiselect("Select columns to display  (by default all are active).", options=df_cme.keys(), default=df_cme.keys(), key='selected_columns_cme')
 hidden_columns = df_cme_org.keys().tolist()
 if 'selected_columns_cme' in st.session_state:
@@ -117,6 +117,8 @@ if (type(grid1['selected_rows']).__name__ == "NoneType"):
 else:
     st.write(grid1['selected_rows'])
     # st.image(grid1['selected_rows']['IP Radio Bursts'].values[0])
+
+st.write('Note for values marked with `*`: Acceleration is uncertain due to either poor height measurement or a small number of height-time measurements')
 
 st.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">To download the shown table as csv file, move the mouse over it and click on the <i class="fa-solid fa-download"></i> icon in the top right of the table.', unsafe_allow_html=True)
 

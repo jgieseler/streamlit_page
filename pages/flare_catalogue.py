@@ -38,7 +38,7 @@ if 'selected_columns_flare' in st.session_state:
 else:
     default_keys = default_columns  # TODO: provides this as an option? show all columns?
 
-st.multiselect("Select columns to display (by default all are active).", options=df_flare_org.keys(), default=default_keys, key='_selected_columns_flare', on_change=store_value, args=["selected_columns_flare"])
+st.multiselect("Select columns to display (by default only a selection is active; click below to add hidden columns).", options=df_flare_org.keys(), default=default_keys, key='_selected_columns_flare', on_change=store_value, args=["selected_columns_flare"])
 # st.multiselect("Select columns to display (by default all are active).", options=df_flare_org.keys(), default=default_keys, key='_selected_columns_flare')
 hidden_columns = df_flare_org.keys().tolist()
 if 'selected_columns_flare' in st.session_state:
