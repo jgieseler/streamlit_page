@@ -25,8 +25,12 @@ def download_catalogues():
                 response.raise_for_status()
                 with open(fpath, 'w', encoding='utf-8') as f:
                     f.write(response.text)
+                print(f"{fname}: download successful")
             except Exception as e:
                 failed.append((fname, str(e)))
+                print(f"{fname}: download failed ({e})")
+        else:
+            print(f"{fname}: already exists (skipped)")
     return failed  # return failures instead of calling st.stop() here
 
 
