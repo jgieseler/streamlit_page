@@ -6,7 +6,7 @@ from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode  # StAggridThem
 from st_aggrid.shared import JsCode
 from time import sleep
 
-from page_config import setup, get_download_link
+from page_config import setup, get_download_link, CATALOGUE_DIR
 
 setup()
 
@@ -16,10 +16,10 @@ st.title('Flare catalogue')
 
 st.write('This catalogue contains solar flares with a flare class > M5 observed in solar cycle 25, including key characteristics of each flare. The flares in this catalogue were compiled using observation from two spacecraft: the Geostationary Operational Environmental Satellite (GOES) and Solar Orbiter (SolO).')
 
-t_df = pd.read_csv(f'catalogues/{fname}.csv', sep=',')
+t_df = pd.read_csv(f'{CATALOGUE_DIR}/{fname}.csv', sep=',')
 time_columns = [col for col in t_df.columns if 'Time' in col]
 
-df_flare_org = pd.read_csv(f'catalogues/{fname}.csv', sep=',', parse_dates=time_columns)
+df_flare_org = pd.read_csv(f'{CATALOGUE_DIR}/{fname}.csv', sep=',', parse_dates=time_columns)
 
 
 def store_value(my_key):

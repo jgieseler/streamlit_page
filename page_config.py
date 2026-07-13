@@ -1,10 +1,14 @@
 import base64
 import os
+import tempfile
 import requests
 import streamlit as st
+from pathlib import Path
 
 # obtain catalogue files from GitHub repository https://github.com/soler-he/catalogues
 BASE_URL = "https://raw.githubusercontent.com/soler-he/catalogues/main/"
+
+CATALOGUE_DIR = Path(tempfile.gettempdir()) / 'catalogues'
 
 CATALOGUE_FILES = [
     'SOLER_CME_catalogue.csv',
