@@ -13,7 +13,7 @@ CATALOGUE_FILES = [
 ]
 
 
-@st.cache_resource  # runs once per app session, not once per page/rerun
+@st.cache_resource(show_spinner=False)  # runs once per app session, not once per page/rerun
 def download_catalogues():
     os.makedirs('catalogues', exist_ok=True)
     failed = []
@@ -27,17 +27,10 @@ def download_catalogues():
                     f.write(response.text)
             except Exception as e:
                 failed.append((fname, str(e)))
-    if failed:
-        msg = "**Failed to download the following catalogues:**\n"
-        for fname, reason in failed:
-            msg += f"- `{fname}`: {reason}\n"
-        msg += "\nPlease reload the page. If the problem persists, the catalogue server may be temporarily unavailable."
-        st.error(msg)
-        st.stop()
+    return failed  # return failures instead of calling st.stop() here
 
 
 def setup():
-    download_catalogues()
     st.set_page_config(
         page_title="SOLER Catalogues",
         page_icon="images/SOLER_Favicon-150x150.png",  # "☀️",  # 🔆
@@ -91,6 +84,18 @@ def setup():
             """,
         unsafe_allow_html=True,
     )
+
+    # download catalogues from GitHub repository
+    with st.spinner("Downloading catalogues, please wait..."):
+        failed = download_catalogues()
+    if failed:
+        download_catalogues.clear()  # clear cache so next reload retries
+        msg = "**Failed to download the following catalogues:**\n"
+        for fname, reason in failed:
+            msg += f"- `{fname}`: {reason}\n"
+        msg += "\nPlease reload the page. If the problem persists, the catalogue server may be temporarily unavailable."
+        st.error(msg)
+        st.stop()
 
     return pg
 
