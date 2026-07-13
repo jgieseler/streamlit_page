@@ -1,4 +1,3 @@
-import os
 import pandas as pd
 import streamlit as st
 from st_aggrid import AgGrid, ColumnsAutoSizeMode, GridOptionsBuilder, GridUpdateMode  # StAggridTheme
@@ -164,8 +163,7 @@ else:
 # st.components.v1.html('<script src="https://kit.fontawesome.com/2c74303849.js" crossorigin="anonymous"></script><p>To download a table as csv file, move the mouse over it and click on the <i class="fa-solid fa-download"></i> icon in the top right of the table.</p>')
 st.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">To download the shown table as csv file, move the mouse over it and click on the <i class="fa-solid fa-download"></i> icon in the top right of the table.', unsafe_allow_html=True)
 
-file_path = os.path.join("catalogues", f"{fname}.csv")
 st.markdown(
-        get_download_link(file_path, "Click here to download the full catalogue containing all columns as csv file!"),
-        unsafe_allow_html=True
+    get_download_link(f"{fname}.csv", "Click here to download the full catalogue containing all columns as csv file!"),
+    unsafe_allow_html=True
 )
