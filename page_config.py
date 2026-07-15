@@ -1,9 +1,44 @@
 import base64
 import os
+import tempfile
+import requests
 import streamlit as st
+from pathlib import Path
+
+# obtain catalogue files from GitHub repository https://github.com/soler-he/catalogues
+BASE_URL = "https://raw.githubusercontent.com/soler-he/catalogues/main/"
+
+CATALOGUE_DIR = Path(tempfile.gettempdir()) / 'catalogues'
+
+CATALOGUE_FILES = [
+    'SOLER_CME_catalogue.csv',
+    'SOLER_Flare_catalogue.csv',
+    'SOLER_SEP_catalogue.csv',
+]
+
+
+@st.cache_resource(show_spinner=False)  # runs once per app session, not once per page/rerun
+def download_catalogues():
+    CATALOGUE_DIR.mkdir(exist_ok=True)
+    failed = []
+    for fname in CATALOGUE_FILES:
+        fpath = CATALOGUE_DIR / fname
+        if not fpath.exists():
+            try:
+                response = requests.get(f'{BASE_URL}{fname}', timeout=10)
+                response.raise_for_status()
+                fpath.write_text(response.text, encoding='utf-8')
+                print(f"{fname}: downloaded successfully to {fpath}")
+            except Exception as e:
+                failed.append((fname, str(e)))
+                print(f"{fname}: download failed ({e})")
+        else:
+            print(f"{fname}: already exists at {fpath} (skipped)")
+    return failed  # return failures instead of calling st.stop() here
 
 
 def setup():
+    download_catalogues()  # cached — only downloads once, but guaranteed to run first
     st.set_page_config(
         page_title="SOLER Catalogues",
         page_icon="images/SOLER_Favicon-150x150.png",  # "☀️",  # 🔆
@@ -61,12 +96,10 @@ def setup():
     return pg
 
 
-def get_download_link(file_path: str, link_text: str) -> str:
+def get_download_link(fname: str, link_text: str) -> str:
+    file_path = CATALOGUE_DIR / fname
     with open(file_path, "rb") as f:
         data = f.read()
-
     b64 = base64.b64encode(data).decode()
-    file_name = os.path.basename(file_path)
-
-    href = f'<a href="data:file/csv;base64,{b64}" download="{file_name}">{link_text}</a>'
+    href = f'<a href="data:file/csv;base64,{b64}" download="{fname}">{link_text}</a>'
     return href

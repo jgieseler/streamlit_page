@@ -1,4 +1,3 @@
-import os
 import pooch
 import pandas as pd
 import streamlit as st
@@ -6,7 +5,7 @@ from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode  # StAggridThem
 from st_aggrid.shared import JsCode
 from time import sleep
 
-from page_config import setup, get_download_link
+from page_config import setup, get_download_link, CATALOGUE_DIR
 
 setup()
 
@@ -16,10 +15,10 @@ st.title('Flare catalogue')
 
 st.write('This catalogue contains solar flares with a flare class > M5 observed in solar cycle 25, including key characteristics of each flare. The flares in this catalogue were compiled using observation from two spacecraft: the Geostationary Operational Environmental Satellite (GOES) and Solar Orbiter (SolO).')
 
-t_df = pd.read_csv(f'catalogues/{fname}.csv', sep=',')
+t_df = pd.read_csv(f'{CATALOGUE_DIR}/{fname}.csv', sep=',')
 time_columns = [col for col in t_df.columns if 'Time' in col]
 
-df_flare_org = pd.read_csv(f'catalogues/{fname}.csv', sep=',', parse_dates=time_columns)
+df_flare_org = pd.read_csv(f'{CATALOGUE_DIR}/{fname}.csv', sep=',', parse_dates=time_columns)
 
 
 def store_value(my_key):
@@ -177,8 +176,7 @@ with details_container:
 
 st.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">To download the shown table as csv file, move the mouse over it and click on the <i class="fa-solid fa-download"></i> icon in the top right of the table.', unsafe_allow_html=True)
 
-file_path = os.path.join("catalogues", f"{fname}.csv")
 st.markdown(
-        get_download_link(file_path, "Click here to download the full catalogue containing all columns as csv file!"),
-        unsafe_allow_html=True
+    get_download_link(f"{fname}.csv", "Click here to download the full catalogue containing all columns as csv file!"),
+    unsafe_allow_html=True
 )

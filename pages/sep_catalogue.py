@@ -1,11 +1,10 @@
-import os
 import pandas as pd
 import streamlit as st
 from st_aggrid import AgGrid, ColumnsAutoSizeMode, GridOptionsBuilder, GridUpdateMode  # StAggridTheme
 from st_aggrid.shared import JsCode
 from time import sleep
 
-from page_config import setup, get_download_link
+from page_config import setup, get_download_link, CATALOGUE_DIR
 
 setup()
 
@@ -15,13 +14,13 @@ st.title('SEP catalogue')
 
 st.write('This catalogue contains multi-spacecraft solar energetic particle (SEP) events, which were observed with the new spacecraft fleet in solar cycle 25. The catalogue comprises key SEP characteristics observed by five different observer locations as provided by Solar Orbiter, Parker Solar Probe, STEREO A, Wind and SOHO (at the Lagrangian point 1), and BepiColombo. The catalogue focuses on large events, which show energetic proton increases above 25 MeV. The catalogue provides not only key parameters of the proton event but also the same parameters for 1 MeV and 100 keV electrons, respectively.')
 
-t_df = pd.read_csv(f'catalogues/{fname}.csv', sep=',')
+t_df = pd.read_csv(f'{CATALOGUE_DIR}/{fname}.csv', sep=',')
 datetime_columns = [col for col in t_df.columns if 'yyyy-mm-dd' in col]
 date_columns = [col for col in t_df.columns if 'yyyy-mm-dd' in col]
 time_columns = [col for col in t_df.columns if 'HH:MM:SS' in col]
 intensity_columns = ['p25MeV peak flux', 'e1MeV peak flux', 'e100keV peak flux', 'e1MeV peak flux proxy', 'e100keV peak flux proxy']
 
-df_sep_org = pd.read_csv(f'catalogues/{fname}.csv', sep=',')  # , parse_dates=datetime_columns)
+df_sep_org = pd.read_csv(f'{CATALOGUE_DIR}/{fname}.csv', sep=',')  # , parse_dates=datetime_columns)
 
 # Convert floats to strings formatted in scientific notation
 for key in intensity_columns:
@@ -164,8 +163,7 @@ else:
 # st.components.v1.html('<script src="https://kit.fontawesome.com/2c74303849.js" crossorigin="anonymous"></script><p>To download a table as csv file, move the mouse over it and click on the <i class="fa-solid fa-download"></i> icon in the top right of the table.</p>')
 st.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">To download the shown table as csv file, move the mouse over it and click on the <i class="fa-solid fa-download"></i> icon in the top right of the table.', unsafe_allow_html=True)
 
-file_path = os.path.join("catalogues", f"{fname}.csv")
 st.markdown(
-        get_download_link(file_path, "Click here to download the full catalogue containing all columns as csv file!"),
-        unsafe_allow_html=True
+    get_download_link(f"{fname}.csv", "Click here to download the full catalogue containing all columns as csv file!"),
+    unsafe_allow_html=True
 )

@@ -1,10 +1,9 @@
-import os
 import pandas as pd
 import streamlit as st
 from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode  # StAggridTheme, ColumnsAutoSizeMode
 from st_aggrid.shared import JsCode
 
-from page_config import setup, get_download_link
+from page_config import setup, get_download_link, CATALOGUE_DIR
 
 setup()
 
@@ -14,10 +13,10 @@ st.title('CME catalogue')
 
 st.write('This catalogue contains coronal mass ejections (CMEs) with a speed > 1000 km/s obtained from the existing CME lists from the Large Angle and Spectrometric Coronagraph Experiment (LASCO) onboard Solar and Heliospheric Observatory (SOHO).')
 
-t_df = pd.read_csv(f'catalogues/{fname}.csv', sep=',')
+t_df = pd.read_csv(f'{CATALOGUE_DIR}/{fname}.csv', sep=',')
 time_columns = [col for col in t_df.columns if 'Time' in col]
 
-df_cme_org = pd.read_csv(f'catalogues/{fname}.csv', sep=',', parse_dates=time_columns)
+df_cme_org = pd.read_csv(f'{CATALOGUE_DIR}/{fname}.csv', sep=',', parse_dates=time_columns)
 
 # remove asterix (*) from columns
 # for col in ['Acceleration', 'Mass', 'Kinetic Energy']:
@@ -138,8 +137,7 @@ st.write('Note for values marked with `*`: Acceleration is uncertain due to eith
 
 st.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">To download the shown table as csv file, move the mouse over it and click on the <i class="fa-solid fa-download"></i> icon in the top right of the table.', unsafe_allow_html=True)
 
-file_path = os.path.join("catalogues", f"{fname}.csv")
 st.markdown(
-        get_download_link(file_path, "Click here to download the full catalogue containing all columns as csv file!"),
-        unsafe_allow_html=True
+    get_download_link(f"{fname}.csv", "Click here to download the full catalogue containing all columns as csv file!"),
+    unsafe_allow_html=True
 )

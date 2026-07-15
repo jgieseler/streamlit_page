@@ -1,4 +1,5 @@
 pandas
 pooch
-streamlit==1.55.0
+requests
+streamlit  # ==1.55.0
 streamlit-aggrid
